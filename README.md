@@ -15,3 +15,5 @@ Some notes that you may want to include in the final main README file.
     - Follow SOLID principles (TODO: Get link)
     - Docker ready
     - Include documentation for the configuration of the system (both client and server)
+* Java version 8 was embraced w.r.t. lambdas, "Optional", etc
+

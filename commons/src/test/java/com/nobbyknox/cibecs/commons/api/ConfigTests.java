@@ -5,8 +5,7 @@ import com.nobbyknox.cibecs.commons.exceptions.ConfigException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Configuration API tests
@@ -29,34 +28,30 @@ class ConfigTests {
 
     @Test
     void shouldReturnValidString() throws ConfigException {
-        assertEquals("A valid string value", Config.getConfigValue("string.valid"));
+        assertEquals("A valid string value", Config.getConfigValue("string.valid").get());
     }
 
     @Test
-    void shouldFailOnNullStringValue() {
-        // Parameter %s has not been configured
+    void shouldFailOnNullStringValue() throws Exception {
         String name = "string.null";
-        Exception exception = assertThrows(ConfigException.class, () -> Config.getConfigValue(name));
-        assertEquals(String.format("Parameter %s has not been configured", name), exception.getMessage());
+        assertFalse(Config.getConfigValue(name).isPresent());
     }
 
     @Test
     void shouldReturnValidInt() throws ConfigException {
-        assertEquals(1, Config.getIntConfigValue("int.valid"));
+        assertEquals(1, Config.getIntConfigValue("int.valid").get());
     }
 
     @Test
-    void shouldFailOnNoSuchConfigName() {
+    void shouldFailOnNoSuchConfigName() throws Exception {
         String name = "no.such.name";
-        Exception exception = assertThrows(ConfigException.class, () -> Config.getConfigValue(name));
-        assertEquals(String.format("Parameter %s has not been configured", name), exception.getMessage());
+        assertFalse(Config.getConfigValue(name).isPresent());
     }
 
     @Test
     void shouldFailOnInvalidIntValue() {
         String name = "int.invalid";
-        Exception exception = assertThrows(ConfigException.class, () -> Config.getIntConfigValue(name));
-        assertEquals(String.format("Parameter %s contains an invalid integer value of %s", name, "A invalid int value"), exception.getMessage());
+        assertThrows(NumberFormatException.class, () -> Config.getIntConfigValue(name));
     }
 
     @Test

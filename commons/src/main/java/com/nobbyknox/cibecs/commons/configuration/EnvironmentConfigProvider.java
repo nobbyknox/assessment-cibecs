@@ -1,15 +1,12 @@
 package com.nobbyknox.cibecs.commons.configuration;
 
 import com.nobbyknox.cibecs.commons.exceptions.ConfigException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class EnvironmentConfigProvider implements ConfigProvider {
-
-    private Logger logger = LogManager.getLogger();
 
     @Override
     public void checkConfiguration(String... names) throws ConfigException {
@@ -32,28 +29,20 @@ public class EnvironmentConfigProvider implements ConfigProvider {
     }
 
     @Override
-    public String getConfigValue(String name) throws ConfigException {
+    public Optional<String> getConfigValue(String name) {
         String value = System.getenv(name);
-
-        if (value == null) {
-            throw new ConfigException(String.format("Parameter %s has not been configured", name));
-        }
-
-        return value;
+        return (value == null ? Optional.empty() : Optional.of(value));
     }
 
     @Override
-    public int getIntConfigValue(String name) throws ConfigException {
-        String stringValue = getConfigValue(name);
+    public Optional<Integer> getIntConfigValue(String name) throws NumberFormatException {
+        Optional<String> optionalStringValue = getConfigValue(name);
+        Optional<Integer> returnValue = Optional.empty();
 
-        if (stringValue == null || stringValue.isEmpty()) {
-            throw new ConfigException(String.format("Parameter %s has not been configured", name));
+        if (optionalStringValue.isPresent()) {
+            returnValue = Optional.of(Integer.parseInt(optionalStringValue.get()));
         }
 
-        try {
-            return Integer.parseInt(stringValue);
-        } catch (NumberFormatException exc) {
-            throw new ConfigException(String.format("Parameter %s contains an invalid integer value of %s", name, stringValue));
-        }
+        return returnValue;
     }
 }

@@ -2,21 +2,18 @@ package com.nobbyknox.cibecs.commons.configuration;
 
 import com.nobbyknox.cibecs.commons.exceptions.ConfigException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MockConfiguration implements ConfigProvider {
 
-    private Map<String, String> config = new HashMap<>();
+    private Map<String, String> configMap = new HashMap<>();
 
     public MockConfiguration() {
-        config.put("string.valid", "A valid string value");
-        config.put("string.null", null);
-        config.put("int.valid", "1");
-        config.put("int.null", null);
-        config.put("int.invalid", "A invalid int value");
+        configMap.put("string.valid", "A valid string value");
+        configMap.put("string.null", null);
+        configMap.put("int.valid", "1");
+        configMap.put("int.null", null);
+        configMap.put("int.invalid", "A invalid int value");
     }
 
     @Override
@@ -29,7 +26,7 @@ public class MockConfiguration implements ConfigProvider {
         List<String> missingParams = new ArrayList<>();
 
         for (String name : names) {
-            if (config.get(name) == null) {
+            if (configMap.get(name) == null) {
                 missingParams.add(name);
             }
         }
@@ -40,28 +37,20 @@ public class MockConfiguration implements ConfigProvider {
     }
 
     @Override
-    public String getConfigValue(String name) throws ConfigException {
-        String value = config.get(name);
-
-        if (value == null) {
-            throw new ConfigException(String.format("Parameter %s has not been configured", name));
-        }
-
-        return value;
+    public Optional<String> getConfigValue(String name) {
+        String value = configMap.get(name);
+        return (value == null ? Optional.empty() : Optional.of(value));
     }
 
     @Override
-    public int getIntConfigValue(String name) throws ConfigException {
-        String stringValue = getConfigValue(name);
+    public Optional<Integer> getIntConfigValue(String name) throws NumberFormatException {
+        Optional<String> optionalStringValue = getConfigValue(name);
+        Optional<Integer> returnValue = Optional.empty();
 
-        if (stringValue == null || stringValue.isEmpty()) {
-            throw new ConfigException(String.format("Parameter %s has not been configured", name));
+        if (optionalStringValue.isPresent()) {
+            returnValue = Optional.of(Integer.parseInt(optionalStringValue.get()));
         }
 
-        try {
-            return Integer.parseInt(stringValue);
-        } catch (NumberFormatException exc) {
-            throw new ConfigException(String.format("Parameter %s contains an invalid integer value of %s", name, stringValue));
-        }
+        return returnValue;
     }
 }

@@ -2,6 +2,8 @@ package com.nobbyknox.cibecs.commons.configuration;
 
 import com.nobbyknox.cibecs.commons.exceptions.ConfigException;
 
+import java.util.Optional;
+
 /**
  * Configuration provider interface
  *
@@ -17,7 +19,7 @@ public interface ConfigProvider {
      * configured.
      *
      * @param names string array of config names to check
-     * @throws ConfigException is thrown when mandatory configs are missing
+     * @throws ConfigException is thrown when any of the config items are missing
      */
     void checkConfiguration(String... names) throws ConfigException;
 
@@ -26,16 +28,15 @@ public interface ConfigProvider {
      *
      * @param name config item name
      * @return config value
-     * @throws ConfigException is thrown when the config item is missing
      */
-    String getConfigValue(String name) throws ConfigException;
+    Optional<String> getConfigValue(String name);
 
     /**
      * Gets an int value for the given config name.
      *
      * @param name config item name
      * @return config value that has been cast to an int
-     * @throws ConfigException is thrown when the config item is missing
+     * @throws NumberFormatException is thrown when the config value is not a valid int
      */
-    int getIntConfigValue(String name) throws ConfigException;
+    Optional<Integer> getIntConfigValue(String name) throws NumberFormatException;
 }
