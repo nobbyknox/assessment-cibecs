@@ -54,12 +54,14 @@ public class TcpClient {
             try {
                 str = din.readUTF();
 
+                logger.debug(str);
+
                 if (this.receiveHandler != null) {
                     this.receiveHandler.handle(str);
                 }
             } catch (IOException e) {
                 // Force the server to close down
-                str = "stop";
+                str = "";
             }
 //            logger.debug("server says: " + str);
 
