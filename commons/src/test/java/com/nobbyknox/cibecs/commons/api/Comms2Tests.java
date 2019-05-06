@@ -7,6 +7,8 @@ class Comms2Tests {
 
     @BeforeAll
     static void beforeAll() {
+
+        // Start the TCP server
         Runnable serverRunner = () -> {
             try {
                 Comms.startServer(9050);
@@ -17,6 +19,7 @@ class Comms2Tests {
 
         new Thread(serverRunner).start();
 
+        // Connect the TCP client to the server
         Runnable clientRunner = () -> {
             try {
                 Thread.sleep(2000);
@@ -31,28 +34,31 @@ class Comms2Tests {
 
     @Test
     void test001() throws Exception {
-        Thread.sleep(3000);
+        int shortSleepTime = 1500;
+        int longSleepTime = 3000;
+
+        Thread.sleep(longSleepTime);
 
         Comms.tellServer("I have these files");
-        Thread.sleep(1000);
+        Thread.sleep(shortSleepTime);
 
         Comms.tellClient("Thank you for the file graph");
-        Thread.sleep(1000);
+        Thread.sleep(shortSleepTime);
 
         Comms.tellServer("Want to hear a story?");
-        Thread.sleep(1000);
+        Thread.sleep(shortSleepTime);
 
         Comms.tellClient("No");
-        Thread.sleep(1000);
+        Thread.sleep(shortSleepTime);
 
         Comms.tellServer("You sure?");
-        Thread.sleep(1000);
+        Thread.sleep(shortSleepTime);
 
         Comms.tellClient("Yes");
-        Thread.sleep(1000);
+        Thread.sleep(shortSleepTime);
 
         Comms.tellClient("I mean no");
-        Thread.sleep(3000);
+        Thread.sleep(shortSleepTime);
     }
 
 }

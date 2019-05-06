@@ -2,10 +2,8 @@ package com.nobbyknox.cibecs.commons.api;
 
 import com.nobbyknox.cibecs.commons.communications.TcpClient4;
 import com.nobbyknox.cibecs.commons.communications.TcpServer4;
-import com.nobbyknox.cibecs.commons.configuration.ConfigProvider;
 
 public class Comms {
-    private static ConfigProvider provider = null;
     private static TcpServer4 server = null;
     private static TcpClient4 client = null;
 
@@ -18,6 +16,7 @@ public class Comms {
 
     }
 
+    // TODO: Maybe rename method to "connectClient"
     public static void startClient(String host, int port) throws Exception {
         Comms.client = new TcpClient4(port);
         Comms.client.connect();
@@ -27,6 +26,7 @@ public class Comms {
 //        Comms.client.stopClient();
     }
 
+    @Deprecated
     public static void sendMessage(String message) throws Exception {
         Comms.client.sendMessage(message);
     }

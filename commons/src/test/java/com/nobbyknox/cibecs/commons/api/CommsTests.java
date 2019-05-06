@@ -1,8 +1,10 @@
 package com.nobbyknox.cibecs.commons.api;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+@Disabled
 class CommsTests {
 
     @BeforeAll
