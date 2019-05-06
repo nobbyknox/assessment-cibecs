@@ -11,21 +11,23 @@ import java.net.Socket;
  * - https://www.javatpoint.com/socket-programming
  */
 
-// TODO: This client needs to be able to read as well
 public class TcpClient {
     private Logger logger = LogManager.getLogger();
+    private String host;
     private int port;
+    private ReceiveHandler<String> receiveHandler;
 
     private Socket s;
     private DataInputStream din;
     private DataOutputStream dout;
 
-    public TcpClient(int port) {
+    public TcpClient(String host, int port) {
+        this.host = host;
         this.port = port;
     }
 
     public void connect() throws Exception {
-        s = new Socket("127.0.0.1", this.port);
+        s = new Socket(this.host, this.port);
         din = new DataInputStream(s.getInputStream());
         dout = new DataOutputStream(s.getOutputStream());
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -49,8 +51,18 @@ public class TcpClient {
         while (!str.equals("stop")) {
 //            logger.debug("Reading...");
 
-            str = din.readUTF();
-            logger.debug("server says: " + str);
+            try {
+                str = din.readUTF();
+
+                if (this.receiveHandler != null) {
+                    this.receiveHandler.handle(str);
+                }
+            } catch (IOException e) {
+                // Force the server to close down
+                str = "stop";
+            }
+//            logger.debug("server says: " + str);
+
 
 //            str2 = br.readLine();
 //            logger.debug("server also says: " + str2);
@@ -59,24 +71,30 @@ public class TcpClient {
 //            dout.flush();
         }
 
-        logger.debug("Done reading");
+        logger.debug("Client disconnecting");
 
     }
 
     public void stopClient() {
-        try {
-            din.close();
-            dout.close();
-            s.close();
-        } catch (IOException e) {
-            // We're closing down, so any exception here is not of major concern.
-            // Sweep it under the carpet.
-        }
+        // TODO: Rethink this method
+//        try {
+//            din.close();
+//            dout.close();
+//            s.close();
+//        } catch (IOException e) {
+//            // We're closing down, so any exception here is not of major concern.
+//            // Sweep it under the carpet.
+//        }
     }
 
     public void sendMessage(String message) throws Exception {
         dout.writeUTF(message);
         dout.flush();
     }
+
+    public void registerHandler(ReceiveHandler<String> handler) {
+        this.receiveHandler = handler;
+    }
+
 
 }

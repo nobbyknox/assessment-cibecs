@@ -15,6 +15,7 @@ import java.net.Socket;
 public class TcpServer {
     private Logger logger = LogManager.getLogger();
     private int port;
+    private ReceiveHandler<String> receiveHandler;
 
     private ServerSocket ss;
     private Socket s;
@@ -36,8 +37,18 @@ public class TcpServer {
         while (!str.equals("stop")) {
 //            logger.debug("Reading...");
 
-            str = din.readUTF();
-            logger.debug("client says: " + str);
+            try {
+                str = din.readUTF();
+
+                if (this.receiveHandler != null) {
+                    this.receiveHandler.handle(str);
+                }
+            } catch (IOException e) {
+                // Force the server to close down
+                str = "stop";
+            }
+//            logger.debug("client says: " + str);
+
 
 //            str2 = br.readLine();
 //            logger.debug("client also says: " + str2);
@@ -61,25 +72,30 @@ public class TcpServer {
         }
 */
 
-        logger.debug("Done reading");
+        logger.debug("Server shutting down");
     }
 
     public void stopServer() {
-        try {
-            din.close();
-            dout.close();
-            s.close();
-            ss.close();
-        } catch (IOException e) {
-            // We're closing down, so any exception here is not of major concern.
-            // Sweep it under the carpet.
-        }
+        // TODO: Rethink this method
+//        try {
+//            din.close();
+//            dout.close();
+//            s.close();
+//            ss.close();
+//        } catch (IOException e) {
+//            // We're closing down, so any exception here is not of major concern.
+//            // Sweep it under the carpet.
+//        }
     }
 
     public void sendMessage(String message) throws Exception {
 //        logger.debug("Sending: " + message);
         dout.writeUTF(message);
         dout.flush();
+    }
+
+    public void registerHandler(ReceiveHandler<String> handler) {
+        this.receiveHandler = handler;
     }
 
 }
