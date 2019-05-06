@@ -1,155 +1,85 @@
 package com.nobbyknox.cibecs.commons.communications;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.StandardSocketOptions;
-import java.nio.ByteBuffer;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
-import java.nio.channels.spi.SelectorProvider;
-import java.nio.charset.StandardCharsets;
-import java.util.Iterator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+/*
+ * Check out:
+ * - https://www.javatpoint.com/socket-programming
+ */
 
 public class TcpServer {
-    private static final int BUFFER_SIZE = 1024;
-    private final static int DEFAULT_PORT = 9050;
-
-    // The buffer into which we'll read data when it's available
-    private ByteBuffer readBuffer = ByteBuffer.allocate(BUFFER_SIZE);
-
-    private InetAddress hostAddress = null;
-
+    private Logger logger = LogManager.getLogger();
     private int port;
-    private Selector selector;
 
-    private long loopTime;
-    private long numMessages = 0;
+    private ServerSocket ss;
+    private Socket s;
+    private DataInputStream din;
+    private DataOutputStream dout;
 
-    public TcpServer() throws IOException {
-        this(DEFAULT_PORT);
-    }
-
-    public TcpServer(int port) throws IOException {
+    public TcpServer(int port) {
         this.port = port;
-        selector = initSelector();
-        loop();
     }
 
-    private void loop() {
-        while (true) {
-            try{
-                selector.select();
-                Iterator<SelectionKey> selectedKeys = selector.selectedKeys().iterator();
-                while (selectedKeys.hasNext()) {
-                    SelectionKey key = selectedKeys.next();
-                    selectedKeys.remove();
+    public void startServer() throws Exception {
+        ss = new ServerSocket(this.port);
+        s = ss.accept();
+        din = new DataInputStream(s.getInputStream());
+        dout = new DataOutputStream(s.getOutputStream());
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-                    if (!key.isValid()) {
-                        continue;
-                    }
+        String str = "", str2 = "";
+        while (!str.equals("stop")) {
+//            logger.debug("Reading...");
 
-                    // Check what event is available and deal with it
-                    if (key.isAcceptable()) {
-                        accept(key);
-                    } else if (key.isReadable()) {
-                        read(key);
-//                    } else if (key.isWritable()) {
-//                        write(key);
-                    }
-                }
+            str = din.readUTF();
+            logger.debug("client says: " + str);
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.exit(1);
-            }
+//            str2 = br.readLine();
+//            logger.debug("client also says: " + str2);
+//
+//            dout.writeUTF(str2);
+//            dout.flush();
         }
+/*
+        String str = "", str2 = "";
+        while (!str.equals("stop")) {
+            logger.debug("Reading...");
+
+            str = br.readLine();
+            logger.debug("client says: " + str);
+
+            dout.writeUTF(str);
+            dout.flush();
+
+            str2 = din.readUTF();
+            logger.debug("client also says: " + str2);
+        }
+*/
+
+        logger.debug("Done reading");
     }
 
-    private void accept(SelectionKey key) throws IOException {
-        ServerSocketChannel serverSocketChannel = (ServerSocketChannel) key.channel();
-
-        SocketChannel socketChannel = serverSocketChannel.accept();
-        socketChannel.configureBlocking(false);
-        socketChannel.setOption(StandardSocketOptions.SO_KEEPALIVE, true);
-        socketChannel.setOption(StandardSocketOptions.TCP_NODELAY, true);
-        socketChannel.register(selector, SelectionKey.OP_READ);
-
-        System.out.println("Client is connected");
-    }
-
-    private void read(SelectionKey key) throws IOException {
-        SocketChannel socketChannel = (SocketChannel) key.channel();
-
-        // Clear out our read buffer so it's ready for new data
-        readBuffer.clear();
-
-        // Attempt to read off the channel
-        int numRead;
-
+    public void stopServer() {
         try {
-            numRead = socketChannel.read(readBuffer);
+            din.close();
+            dout.close();
+            s.close();
+            ss.close();
         } catch (IOException e) {
-            key.cancel();
-            socketChannel.close();
-
-            System.out.println("Forceful shutdown");
-            return;
+            // We're closing down, so any exception here is not of major concern.
+            // Sweep it under the carpet.
         }
-
-        if (numRead == -1) {
-            System.out.println("Graceful shutdown");
-            key.channel().close();
-            key.cancel();
-
-            return;
-        }
-
-        byte[] data = new byte[numRead];
-        System.arraycopy(readBuffer.array(), 0, data, 0, numRead);
-        String readMessage = new String(data, StandardCharsets.UTF_8);
-        System.out.println("Got from client: " + readMessage);
-
-        write(key, readMessage);
-
-//        socketChannel.register(selector, SelectionKey.OP_WRITE);
-
-//        numMessages++;
-//        if (numMessages%100000 == 0) {
-//            long elapsed = System.currentTimeMillis() - loopTime;
-//            loopTime = System.currentTimeMillis();
-//            System.out.println(elapsed);
-//        }
     }
 
-    private void write(SelectionKey key, String message) throws IOException {
-        SocketChannel socketChannel = (SocketChannel) key.channel();
-        ByteBuffer dummyResponse = ByteBuffer.wrap(message.getBytes(StandardCharsets.UTF_8));
-
-        socketChannel.write(dummyResponse);
-        if (dummyResponse.remaining() > 0) {
-            System.err.print("Filled UP");
-        }
-
-//        key.interestOps(SelectionKey.OP_READ);
+    public void sendMessage(String message) throws Exception {
+//        logger.debug("Sending: " + message);
+        dout.writeUTF(message);
+        dout.flush();
     }
 
-    private Selector initSelector() throws IOException {
-        Selector socketSelector = SelectorProvider.provider().openSelector();
-
-        ServerSocketChannel serverChannel = ServerSocketChannel.open();
-        serverChannel.configureBlocking(false);
-
-        InetSocketAddress isa = new InetSocketAddress(hostAddress, port);
-        serverChannel.socket().bind(isa);
-        serverChannel.register(socketSelector, SelectionKey.OP_ACCEPT);
-        return socketSelector;
-    }
-
-//    public static void main(String[] args) throws IOException {
-//        System.out.println("Starting echo server");
-//        new EchoServer();
-//    }
 }

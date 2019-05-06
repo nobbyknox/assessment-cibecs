@@ -1,34 +1,28 @@
 package com.nobbyknox.cibecs.commons.api;
 
-import com.nobbyknox.cibecs.commons.communications.TcpClient4;
-import com.nobbyknox.cibecs.commons.communications.TcpServer4;
+import com.nobbyknox.cibecs.commons.communications.TcpClient;
+import com.nobbyknox.cibecs.commons.communications.TcpServer;
 
 public class Comms {
-    private static TcpServer4 server = null;
-    private static TcpClient4 client = null;
+    private static TcpServer server = null;
+    private static TcpClient client = null;
 
     public static void startServer(int port) throws Exception {
-        Comms.server = new TcpServer4(port);
+        Comms.server = new TcpServer(port);
         Comms.server.startServer();
     }
 
     public static void stopServer() {
-
+        Comms.server.stopServer();
     }
 
-    // TODO: Maybe rename method to "connectClient"
-    public static void startClient(String host, int port) throws Exception {
-        Comms.client = new TcpClient4(port);
+    public static void connectClient(String host, int port) throws Exception {
+        Comms.client = new TcpClient(port);
         Comms.client.connect();
     }
 
-    public static void stopClient() throws Exception {
-//        Comms.client.stopClient();
-    }
-
-    @Deprecated
-    public static void sendMessage(String message) throws Exception {
-        Comms.client.sendMessage(message);
+    public static void stopClient() {
+        Comms.client.stopClient();
     }
 
     public static void tellServer(String message) throws Exception {
