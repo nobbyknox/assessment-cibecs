@@ -1,7 +1,9 @@
 package com.nobbyknox.cibecs.commons.api;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -12,10 +14,20 @@ class CommsTests {
 
     private Logger logger = LogManager.getLogger();
     private String expectedReply = "Greetings";
-    private boolean showLogs = false;
+//    private boolean showLogs = true;
 
     @BeforeAll
     static void beforeAll() {
+
+        /*
+         * Suppress logging from TCP client and server.
+         *
+         * Normally, you would just set the log level for the entire unit test run.
+         * However, I'm using these tests to develop my solution and need finer
+         * control over who logs what.
+         */
+        Configurator.setLevel("com.nobbyknox.cibecs.commons.communications.TcpServer", Level.ERROR);
+        Configurator.setLevel("com.nobbyknox.cibecs.commons.communications.TcpClient", Level.ERROR);
 
         // Start the TCP server
         Runnable serverRunner = () -> {
@@ -60,11 +72,24 @@ class CommsTests {
         // Starts a conversation. The chat is directed by the respective
         // server and client handlers below.
         Comms.tellServer(this.expectedReply);
+
+        // Give enough time for the conversation between client and server
+        // to complete. JUnit has no way to "know" when the threads have
+        // completed their chats.
+        Thread.sleep(1000);
     }
 
     private void serverHandler(String message) throws Exception {
-        if (showLogs) logger.debug("Client says: " + message);
+        logger.debug("Client says: " + message);
 
+        /*
+         * With this simple assertion we assert a few things:
+         * 1. The comms implementation works
+         * 2. Both server and client received messages that:
+         *   2.1 Encoded/decoded correctly
+         *   2.2 Was comprehended and acted upon accordingly
+         *   2.3 We can implement a rudimentary workflow
+         */
         assertEquals(expectedReply, message);
 
         if (message.equalsIgnoreCase("Greetings")) {
@@ -79,14 +104,14 @@ class CommsTests {
     }
 
     private void clientHandler(String message) throws Exception {
-        if (showLogs) logger.debug("Server says: " + message);
+        logger.debug("Server says: " + message);
 
         if (message.equalsIgnoreCase("Well, hello there")) {
             Comms.tellServer("You well?");
         } else if (message.equalsIgnoreCase("Very well")) {
             Comms.tellServer("Good, carry on");
         } else if (message.equalsIgnoreCase("Good Bye")) {
-            if (showLogs) logger.debug("Server left");
+            logger.debug("Server left");
         }
     }
 
