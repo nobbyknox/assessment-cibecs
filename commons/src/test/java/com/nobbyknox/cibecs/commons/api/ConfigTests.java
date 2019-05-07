@@ -1,12 +1,9 @@
 package com.nobbyknox.cibecs.commons.api;
 
-import com.nobbyknox.cibecs.commons.configuration.ConfigName;
 import com.nobbyknox.cibecs.commons.configuration.MockConfiguration;
 import com.nobbyknox.cibecs.commons.exceptions.ConfigException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 

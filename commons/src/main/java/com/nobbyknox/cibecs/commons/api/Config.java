@@ -38,8 +38,10 @@ public class Config {
     public static void printConfigHelp(Optional<String[]> requiredNames) {
 
         Map<String, String> helpMessages = new HashMap<>();
-        helpMessages.put(ConfigName.TCP_SERVER_HOST.getName(), String.format("  * %s [string]: The host name or IP address of the TCP server", ConfigName.TCP_SERVER_HOST.getName()));
-        helpMessages.put(ConfigName.TCP_SERVER_PORT.getName(), String.format("  * %s [integer]: The port number of the TCP server", ConfigName.TCP_SERVER_PORT.getName()));
+        helpMessages.put(ConfigName.ACCOUNT_CODE.getName(), String.format("  \"%s\" [string]: The account code of the customer", ConfigName.ACCOUNT_CODE.getName()));
+        helpMessages.put(ConfigName.SYNC_DIR.getName(), String.format("  \"%s\" [string]: The root directory to transfer to the server", ConfigName.SYNC_DIR.getName()));
+        helpMessages.put(ConfigName.TCP_SERVER_HOST.getName(), String.format("  \"%s\" [string]: The host name or IP address of the TCP server", ConfigName.TCP_SERVER_HOST.getName()));
+        helpMessages.put(ConfigName.TCP_SERVER_PORT.getName(), String.format("  \"%s\" [integer]: The port number of the TCP server", ConfigName.TCP_SERVER_PORT.getName()));
 
         // Print only help for the required config variables. Don't worry the user with irrelevant config variables.
         if (requiredNames.isPresent()) {

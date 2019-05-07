@@ -17,7 +17,7 @@ import java.nio.file.Path;
  * graph of the specified path via the {@link Node} class.
  *
  */
-class Filesystem {
+public class Filesystem {
     private static Logger logger = LogManager.getLogger();
 
     /**
@@ -26,20 +26,20 @@ class Filesystem {
      * @param rootDir root directory of the tree graph
      * @return tree graph in the form of a {@link Node} class
      */
-    static Node buildGraph(String rootDir) {
+    public static Node buildGraph(String rootDir) {
         logger.debug(String.format("Graphing %s", rootDir));
         return getNode(new File(rootDir).toPath());
     }
 
     private static Node getNode(Path dir) {
-        Node node = new DirectoryNode(dir.toFile().getName(), dir);
+        Node node = new DirectoryNode(dir.toFile().getName(), dir.toFile().getPath());
 
         try {
             Files.newDirectoryStream(dir).forEach((path) -> {
                 if (path.toFile().isDirectory()) {
                     node.getChildren().add(getNode(path));
                 } else {
-                    node.getChildren().add(new FileNode(path.toFile().getName(), path));
+                    node.getChildren().add(new FileNode(path.toFile().getName(), path.toFile().getPath()));
                 }
             });
         } catch (IOException e) {

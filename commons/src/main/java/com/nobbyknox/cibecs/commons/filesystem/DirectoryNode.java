@@ -1,16 +1,16 @@
 package com.nobbyknox.cibecs.commons.filesystem;
 
-import java.nio.file.Path;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DirectoryNode extends Node {
+public class DirectoryNode extends Node implements Serializable {
 
     private String name;
-    private Path path;
+    private String path;
     private List<Node> children;
 
-    public DirectoryNode(String name, Path path) {
+    public DirectoryNode(String name, String path) {
         this.name = name;
         this.path = path;
         this.children = new ArrayList<>();
@@ -22,7 +22,7 @@ public class DirectoryNode extends Node {
     }
 
     @Override
-    public Path getPath() {
+    public String getPath() {
         return this.path;
     }
 

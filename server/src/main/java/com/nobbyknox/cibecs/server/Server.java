@@ -1,6 +1,5 @@
 package com.nobbyknox.cibecs.server;
 
-
 import com.nobbyknox.cibecs.commons.api.Comms;
 import com.nobbyknox.cibecs.commons.api.Config;
 import com.nobbyknox.cibecs.commons.configuration.ConfigName;
@@ -17,6 +16,10 @@ import java.util.Optional;
 public class Server {
     private Logger logger = LogManager.getLogger();
 
+    public static void main(String... args) {
+        new Server();
+    }
+
     public Server() {
         // Suppress the chatter of others
         Configurator.setLevel("org", Level.ERROR);
@@ -32,7 +35,7 @@ public class Server {
 
         Runnable tcpRunner = () -> {
             try {
-                Comms.startServer(Config.getIntConfigValue("tcp.server.port").get());
+                Comms.startServer(Config.getIntConfigValue(ConfigName.TCP_SERVER_PORT.getName()).get());
             } catch (Exception exc) {
                 exc.printStackTrace();
             }
@@ -52,6 +55,8 @@ public class Server {
             logger.info("Shutting down...");
             Comms.stopServer();
         }));
+
+        logger.info("Server is ready");
     }
 
     private void checkConfig() throws ConfigException {
@@ -64,14 +69,5 @@ public class Server {
             Config.printConfigHelp(Optional.of(requiredConfigNames));
             throw exc;
         }
-    }
-
-//    private void printConfigHelp() {
-//        logger.info("The following parameters are necessary for the correct operation of the system:");
-//        logger.info("  * tcp.server.port [integer]: The port of the TCP server");
-//    }
-
-    public static void main(String... args) {
-        new Server();
     }
 }

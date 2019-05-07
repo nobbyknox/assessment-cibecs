@@ -5,24 +5,28 @@ import com.nobbyknox.cibecs.commons.filesystem.Node;
 import java.io.Serializable;
 
 public class TreeGraphMessage implements Message, Serializable {
-    private String filename;
-    private String path;
+    private String accountCode;
     private Node treeGraph;
 
-    public TreeGraphMessage(String name, String path, Node node) {
-        this.filename = name;
-        this.path = path;
+    public TreeGraphMessage(String accountCode, Node node) {
+        this.accountCode = accountCode;
         this.treeGraph = node;
     }
 
-    public String getFilename() {
-        return this.filename;
+    /**
+     * The fictitious account code for one of our customers.
+     *
+     * @return unique customer account code
+     */
+    public String getAccountCode() {
+        return this.accountCode;
     }
 
-    public String getPath() {
-        return this.path;
-    }
-
+    /**
+     * Returns the tree graph
+     *
+     * @return filesystem tree graph
+     */
     public Node getTreeGraph() {
         return this.treeGraph;
     }
@@ -34,6 +38,6 @@ public class TreeGraphMessage implements Message, Serializable {
 
     @Override
     public String toString() {
-        return String.format("[%s] %s", getType(), getFilename());
+        return String.format("[%s] %s", getType(), getAccountCode());
     }
 }

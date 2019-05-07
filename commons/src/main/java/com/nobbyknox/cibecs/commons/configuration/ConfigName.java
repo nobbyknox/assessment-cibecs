@@ -1,8 +1,10 @@
 package com.nobbyknox.cibecs.commons.configuration;
 
 public enum ConfigName {
-    TCP_SERVER_HOST("tcp.server.host"),
-    TCP_SERVER_PORT("tcp.server.port");
+    ACCOUNT_CODE("accountCode"),
+    SYNC_DIR("syncDir"),
+    TCP_SERVER_HOST("tcpServerHost"),
+    TCP_SERVER_PORT("tcpServerPort");
 
     private String name;
 

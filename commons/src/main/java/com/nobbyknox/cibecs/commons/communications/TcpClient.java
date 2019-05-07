@@ -44,7 +44,8 @@ public class TcpClient {
                     }
                 }
             } catch (IOException exc) {
-                keepRunning = false;
+                // TODO: This gets triggered when the server disconnects. Is it the functionality we want?
+//                keepRunning = false;
             }
         }
     }
