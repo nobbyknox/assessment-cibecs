@@ -1,11 +1,14 @@
 package com.nobbyknox.cibecs.commons.api;
 
+import com.nobbyknox.cibecs.commons.communications.EchoMessage;
+import com.nobbyknox.cibecs.commons.communications.Message;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -13,8 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class CommsTests {
 
     private Logger logger = LogManager.getLogger();
-    private String expectedReply = "Greetings";
-//    private boolean showLogs = true;
+    private int serverMessagesReceived = 0;
+    private int clientMessagesReceived = 0;
 
     @BeforeAll
     static void beforeAll() {
@@ -61,7 +64,8 @@ class CommsTests {
     }
 
     @Test
-    void test001() throws Exception {
+    @DisplayName("should have conversation over comms")
+    void shouldHaveConversationOverComms() throws Exception {
 
         // Give enough time for the server and client to start/connect
         Thread.sleep(3000);
@@ -69,49 +73,53 @@ class CommsTests {
         Comms.registerServerReceiveHandler(this::serverHandler);
         Comms.registerClientReceiveHandler(this::clientHandler);
 
-        // Starts a conversation. The chat is directed by the respective
-        // server and client handlers below.
-        Comms.tellServer(this.expectedReply);
+        // Strike up a conversation
+        Comms.tellServer(new EchoMessage("1"));
 
         // Give enough time for the conversation between client and server
         // to complete. JUnit has no way to "know" when the threads have
         // completed their chats.
         Thread.sleep(1000);
-    }
-
-    private void serverHandler(String message) throws Exception {
-        logger.debug("Client says: " + message);
 
         /*
-         * With this simple assertion we assert a few things:
+         * With these simple assertions we assert a few things:
          * 1. The comms implementation works
          * 2. Both server and client received messages that:
          *   2.1 Encoded/decoded correctly
          *   2.2 Was comprehended and acted upon accordingly
          *   2.3 We can implement a rudimentary workflow
          */
-        assertEquals(expectedReply, message);
+        assertEquals(3, this.serverMessagesReceived);
+        assertEquals(2, this.clientMessagesReceived);
+    }
 
-        if (message.equalsIgnoreCase("Greetings")) {
-            expectedReply = "You well?";
-            Comms.tellClient("Well, hello there");
-        } else if (message.equalsIgnoreCase("You well?")) {
-            expectedReply = "Good, carry on";
-            Comms.tellClient("Very well");
-        } else if (message.equalsIgnoreCase("Good, carry on")) {
-            Comms.tellClient("Good bye");
+    private void serverHandler(Message message) throws Exception {
+        logger.debug("Client says: " + message);
+
+        if (message instanceof EchoMessage) {
+            this.serverMessagesReceived++;
+            EchoMessage msg = (EchoMessage) message;
+
+            if (msg.getPayload().equals("1")) {
+                Comms.tellClient(new EchoMessage("2"));
+            } else if (msg.getPayload().equals("3")) {
+                Comms.tellClient(new EchoMessage("4"));
+            }
         }
     }
 
-    private void clientHandler(String message) throws Exception {
+    private void clientHandler(Message message) throws Exception {
         logger.debug("Server says: " + message);
 
-        if (message.equalsIgnoreCase("Well, hello there")) {
-            Comms.tellServer("You well?");
-        } else if (message.equalsIgnoreCase("Very well")) {
-            Comms.tellServer("Good, carry on");
-        } else if (message.equalsIgnoreCase("Good Bye")) {
-            logger.debug("Server left");
+        if (message instanceof EchoMessage) {
+            this.clientMessagesReceived++;
+            EchoMessage msg = (EchoMessage) message;
+
+            if (msg.getPayload().equals("2")) {
+                Comms.tellServer(new EchoMessage("3"));
+            } else if (msg.getPayload().equals("4")) {
+                Comms.tellServer(new EchoMessage("5"));
+            }
         }
     }
 
