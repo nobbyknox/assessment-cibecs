@@ -9,9 +9,23 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+/**
+ * Filesystem API
+ *
+ * <p>
+ * This API provides the functionality to construct a filesystem
+ * graph of the specified path via the {@link Node} class.
+ *
+ */
 class Filesystem {
     private static Logger logger = LogManager.getLogger();
 
+    /**
+     * Builds a filesystem tree graph for the given path.
+     *
+     * @param rootDir root directory of the tree graph
+     * @return tree graph in the form of a {@link Node} class
+     */
     static Node buildGraph(String rootDir) {
         logger.debug(String.format("Graphing %s", rootDir));
         return getNode(new File(rootDir).toPath());

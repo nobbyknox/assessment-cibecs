@@ -14,12 +14,12 @@ public class EchoMessage implements Message, Serializable {
     }
 
     @Override
-    public String type() {
-        return "ECHO";
+    public MessageType getType() {
+        return MessageType.ECHO;
     }
 
     @Override
     public String toString() {
-        return String.format("[%s] %s", type(), this.payload);
+        return String.format("[%s] %s", getType(), this.payload);
     }
 }

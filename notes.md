@@ -16,3 +16,8 @@
     - Important: charset ISO-8859-1 is bijective (and this seems to be important)
     - Check out the answer with the serialize and deserialize methods
 * http://www.javacoffeebreak.com/articles/serialization/index.html
+
+## Reading / Writing Files
+
+* https://www.codejava.net/java-se/file-io/how-to-read-and-write-binary-files-in-java
+    - Good bit about reading files to byte[] and write back to file
