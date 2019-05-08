@@ -44,6 +44,12 @@ public class Client {
             e.printStackTrace();
         }
 
+        // Register a shutdown hook so that we can exit cleanly
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            logger.info("Shutting down...");
+            Comms.stopClient();
+        }));
+
         logger.info("Client is ready");
 
         initiateFileTransfer();

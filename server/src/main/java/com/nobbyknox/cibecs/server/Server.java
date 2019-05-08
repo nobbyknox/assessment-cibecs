@@ -6,13 +6,14 @@ import com.nobbyknox.cibecs.commons.configuration.ConfigName;
 import com.nobbyknox.cibecs.commons.configuration.EnvironmentConfigProvider;
 import com.nobbyknox.cibecs.commons.exceptions.ConfigException;
 import com.nobbyknox.cibecs.server.communications.MessageHandler;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.config.Configurator;
 
 import java.util.Optional;
 
+/**
+ * This is the main entry point into the server component
+ */
 public class Server {
     private Logger logger = LogManager.getLogger();
 
@@ -21,9 +22,6 @@ public class Server {
     }
 
     public Server() {
-        // Suppress the chatter of others
-        Configurator.setLevel("org", Level.ERROR);
-
         // Check that all the mandatory parameters/settings have been configured.
         // We cannot run without these.
         try {
@@ -43,14 +41,18 @@ public class Server {
 
         new Thread(tcpRunner).start();
 
-
         try {
+            // Allow the server some time to start before we register the message handler
             Thread.sleep(3000);
+
+            // This is our custom message handler that will handle
+            // communications from the client.
             Comms.registerServerReceiveHandler(MessageHandler::handle);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
+        // Register a shutdown hook so that we can exit cleanly
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             logger.info("Shutting down...");
             Comms.stopServer();
@@ -59,6 +61,17 @@ public class Server {
         logger.info("Server is ready");
     }
 
+    /**
+     * Ensure we have the mandatory config elements set. Without the following, the
+     * server cannot run:
+     *
+     * <ul>
+     * <li>Target directory where client data will be saved
+     * <li>Port number on which to listen
+     * </ul>
+     *
+     * @throws ConfigException
+     */
     private void checkConfig() throws ConfigException {
         String[] requiredConfigNames = {ConfigName.TARGET_DIR.getName(), ConfigName.TCP_SERVER_PORT.getName()};
 
