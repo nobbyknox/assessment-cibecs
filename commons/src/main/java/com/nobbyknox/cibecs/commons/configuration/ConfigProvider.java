@@ -7,13 +7,14 @@ import java.util.Optional;
 /**
  * Configuration provider interface
  *
- * This is the contract that all configuration providers are bound.
+ * This is the contract that binds all configuration providers.
  */
 public interface ConfigProvider {
 
     /**
-     * For a list of configuration names, check that everyone has been configured.
+     * For a list of configuration names, check that every item has been configured
      *
+     * <p>
      * This allows the system to fail early. Additionally, it also provides the
      * operator with detailed information about which config items were not
      * configured.
@@ -24,7 +25,7 @@ public interface ConfigProvider {
     void checkConfiguration(String... names) throws ConfigException;
 
     /**
-     * Gets a string value for the given config name.
+     * Gets a string value for the given config name
      *
      * @param name config item name
      * @return config value
@@ -32,7 +33,7 @@ public interface ConfigProvider {
     Optional<String> getConfigValue(String name);
 
     /**
-     * Gets an int value for the given config name.
+     * Gets an integer value for the given config name
      *
      * @param name config item name
      * @return config value that has been cast to an int

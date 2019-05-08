@@ -11,21 +11,31 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Configuration API
+ */
 public class Config {
+
     private static ConfigProvider provider = null;
     private static Logger logger = LogManager.getLogger();
 
+    /**
+     * Configure the Config API with a config provider
+     *
+     * @param provider object that implements the {@link ConfigProvider} interface
+     */
     public static void configureWith(ConfigProvider provider) {
         Config.provider = provider;
     }
 
     /**
-     * Check the configuration to ensure that A) a provider has been specified and
-     * B) all mandatory config items have been configured.
+     * Check the configuration to ensure that
+     * A) a provider has been specified
+     * B) all mandatory config items have been configured
      *
-     * @param names list of mandatory config items
-     * @throws ConfigException is thrown when no provider has been specified or when
-     *                         one or more mandatory config items are missing
+     * @param names string array of mandatory config names
+     * @throws ConfigException if no provider has been specified or when one
+     * or more mandatory config items are missing
      */
     public static void checkConfiguration(String... names) throws ConfigException {
         if (Config.provider == null) {
@@ -35,6 +45,12 @@ public class Config {
         provider.checkConfiguration(names);
     }
 
+    /**
+     * Print help indicating which config items are missing, or lists all in the
+     * case where no names were given
+     *
+     * @param requiredNames optional list of mandatory config items
+     */
     public static void printConfigHelp(Optional<String[]> requiredNames) {
 
         Map<String, String> helpMessages = new HashMap<>();
@@ -54,6 +70,13 @@ public class Config {
         }
     }
 
+    /**
+     * Get the string value for the specified config name
+     *
+     * @param name configuration item name
+     * @return optional config value
+     * @throws ConfigException if no config provider was specified during setup
+     */
     public static Optional<String> getConfigValue(String name) throws ConfigException {
         if (Config.provider == null) {
             throw new ConfigException("No configuration provider specified");
@@ -62,6 +85,14 @@ public class Config {
         return provider.getConfigValue(name);
     }
 
+    /**
+     * Get the int value for the specified config name
+     *
+     * @param name configuration item name
+     * @return optional config value of type Integer
+     * @throws ConfigException if no config provider was specified during setup
+     * @throws NumberFormatException if the value is not a valid integer
+     */
     public static Optional<Integer> getIntConfigValue(String name) throws ConfigException, NumberFormatException {
         if (Config.provider == null) {
             throw new ConfigException("No configuration provider specified");

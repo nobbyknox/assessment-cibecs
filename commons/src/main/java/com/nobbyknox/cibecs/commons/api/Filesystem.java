@@ -14,14 +14,14 @@ import java.nio.file.Path;
  *
  * <p>
  * This API provides the functionality to construct a filesystem
- * graph of the specified path via the {@link Node} class.
+ * graph of the specified root path via the {@link Node} class.
  *
  */
 public class Filesystem {
     private static Logger logger = LogManager.getLogger();
 
     /**
-     * Builds a filesystem tree graph for the given path.
+     * Builds a filesystem tree graph for the given path
      *
      * @param rootDir root directory of the tree graph
      * @return tree graph in the form of a {@link Node} class

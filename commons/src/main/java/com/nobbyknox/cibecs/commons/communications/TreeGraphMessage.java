@@ -4,6 +4,10 @@ import com.nobbyknox.cibecs.commons.filesystem.Node;
 
 import java.io.Serializable;
 
+/**
+ * The TreeGraphMessage carries a directory tree for a specific account (customer)
+ * from the client to the server.
+ */
 public class TreeGraphMessage implements Message, Serializable {
     private String accountCode;
     private Node treeGraph;

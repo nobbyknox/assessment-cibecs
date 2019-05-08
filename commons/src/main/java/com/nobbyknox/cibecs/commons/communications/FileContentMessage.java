@@ -2,19 +2,30 @@ package com.nobbyknox.cibecs.commons.communications;
 
 import java.io.Serializable;
 
+/**
+ * Contents of file is wrapped in this message and is sent by the client
+ * to the server
+ */
 public class FileContentMessage implements Message, Serializable {
 
     private String accountCode;
     private String path;
     private byte[] contents;
 
+    /**
+     * Instantiates a new message for the requested file path for the
+     * given customer
+     *
+     * @param accountCode unique customer account code
+     * @param path of file to retrieve
+     */
     public FileContentMessage(String accountCode, String path) {
         this.accountCode = accountCode;
         this.path = path;
     }
 
     /**
-     * The fictitious account code for one of our customers.
+     * The fictitious account code for one of our customers
      *
      * @return unique customer account code
      */

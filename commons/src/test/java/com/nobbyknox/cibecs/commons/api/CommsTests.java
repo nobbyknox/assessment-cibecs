@@ -13,6 +13,12 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * The {@link Comms} API is tested here by having the client and server
+ * engage in a short conversation. The client says something to the server,
+ * which reads the message and replies with a specific response. The
+ * conversation carries on for a while.
+ */
 class CommsTests {
 
     private Logger logger = LogManager.getLogger();
@@ -22,20 +28,10 @@ class CommsTests {
     @BeforeAll
     static void beforeAll() {
 
-        /*
-         * Suppress logging from TCP client and server.
-         *
-         * Normally, you would just set the log level for the entire unit test run.
-         * However, I'm using these tests to develop my solution and need finer
-         * control over who logs what.
-         */
-        Configurator.setLevel("com.nobbyknox.cibecs.commons.communications.TcpServer", Level.ERROR);
-        Configurator.setLevel("com.nobbyknox.cibecs.commons.communications.TcpClient", Level.ERROR);
-
         // Start the TCP server
         Runnable serverRunner = () -> {
             try {
-                Comms.startServer(9050);
+                Comms.startServer(9051);
             } catch (Exception exc) {
                 exc.printStackTrace();
             }
@@ -48,7 +44,7 @@ class CommsTests {
             try {
                 // Allow the server enough time to start
                 Thread.sleep(2000);
-                Comms.connectClient("127.0.0.1", 9050);
+                Comms.connectClient("127.0.0.1", 9051);
             } catch (Exception exc) {
                 exc.printStackTrace();
             }
