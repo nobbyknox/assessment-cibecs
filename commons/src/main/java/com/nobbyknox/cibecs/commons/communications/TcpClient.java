@@ -55,7 +55,7 @@ public class TcpClient {
             this.objIn.close();
             this.objOut.close();
             this.socket.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             // We're closing down, so any exception here is not of major concern.
             // Sweep it under the carpet.
         }

@@ -59,7 +59,7 @@ public class TcpServer {
             this.objOut.close();
             this.socket.close();
             this.serverSocket.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             // We're closing down, so any exception here is not of major concern.
             // Sweep it under the carpet.
         }
