@@ -1,8 +1,8 @@
 package com.nobbyknox.cibecs.server;
 
-
 import com.nobbyknox.cibecs.commons.api.Comms;
 import com.nobbyknox.cibecs.commons.api.Config;
+import com.nobbyknox.cibecs.commons.configuration.ConfigName;
 import com.nobbyknox.cibecs.commons.configuration.EnvironmentConfigProvider;
 import com.nobbyknox.cibecs.commons.exceptions.ConfigException;
 import com.nobbyknox.cibecs.server.communications.MessageHandler;
@@ -11,8 +11,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 
+import java.util.Optional;
+
 public class Server {
     private Logger logger = LogManager.getLogger();
+
+    public static void main(String... args) {
+        new Server();
+    }
 
     public Server() {
         // Suppress the chatter of others
@@ -23,14 +29,13 @@ public class Server {
         try {
             checkConfig();
         } catch (ConfigException exc) {
-            logger.fatal(exc);
-            printConfigHelp();
+            // Don't log the exception, as we already printed a nice message to the user
             System.exit(1);
         }
 
         Runnable tcpRunner = () -> {
             try {
-                Comms.startServer(Config.getIntConfigValue("tcp.server.port").get());
+                Comms.startServer(Config.getIntConfigValue(ConfigName.TCP_SERVER_PORT.getName()).get());
             } catch (Exception exc) {
                 exc.printStackTrace();
             }
@@ -50,21 +55,19 @@ public class Server {
             logger.info("Shutting down...");
             Comms.stopServer();
         }));
+
+        logger.info("Server is ready");
     }
 
     private void checkConfig() throws ConfigException {
-        String[] paramNames = {"tcp.server.port"};
-        Config.configureWith(new EnvironmentConfigProvider());
-        Config.checkConfiguration(paramNames);
+        String[] requiredConfigNames = {ConfigName.TARGET_DIR.getName(), ConfigName.TCP_SERVER_PORT.getName()};
 
-    }
-
-    private void printConfigHelp() {
-        logger.info("The following parameters are necessary for the correct operation of the system:");
-        logger.info("  * tcp.server.port [integer]: The port of the TCP server");
-    }
-
-    public static void main(String... args) {
-        new Server();
+        try {
+            Config.configureWith(new EnvironmentConfigProvider());
+            Config.checkConfiguration(requiredConfigNames);
+        } catch (ConfigException exc) {
+            Config.printConfigHelp(Optional.of(requiredConfigNames));
+            throw exc;
+        }
     }
 }

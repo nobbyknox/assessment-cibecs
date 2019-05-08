@@ -2,4 +2,5 @@
 .vscode/
 references/
 target/
+server/store/customer001/
 *.iml
