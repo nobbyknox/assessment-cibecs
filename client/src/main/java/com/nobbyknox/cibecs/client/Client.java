@@ -51,6 +51,7 @@ public class Client {
     private void checkConfig() throws ConfigException {
         String[] requiredConfigNames = {
                 ConfigName.ACCOUNT_CODE.getName(),
+                ConfigName.SOURCE_DIR.getName(),
                 ConfigName.TCP_SERVER_HOST.getName(),
                 ConfigName.TCP_SERVER_PORT.getName()
         };

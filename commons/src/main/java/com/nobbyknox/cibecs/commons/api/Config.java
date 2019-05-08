@@ -39,7 +39,8 @@ public class Config {
 
         Map<String, String> helpMessages = new HashMap<>();
         helpMessages.put(ConfigName.ACCOUNT_CODE.getName(), String.format("  \"%s\" [string]: The account code of the customer", ConfigName.ACCOUNT_CODE.getName()));
-        helpMessages.put(ConfigName.SYNC_DIR.getName(), String.format("  \"%s\" [string]: The root directory to transfer to the server", ConfigName.SYNC_DIR.getName()));
+        helpMessages.put(ConfigName.SOURCE_DIR.getName(), String.format("  \"%s\" [string]: The root directory to transfer to the server", ConfigName.SOURCE_DIR.getName()));
+        helpMessages.put(ConfigName.TARGET_DIR.getName(), String.format("  \"%s\" [string]: The target directory to where files from the client will be written", ConfigName.TARGET_DIR.getName()));
         helpMessages.put(ConfigName.TCP_SERVER_HOST.getName(), String.format("  \"%s\" [string]: The host name or IP address of the TCP server", ConfigName.TCP_SERVER_HOST.getName()));
         helpMessages.put(ConfigName.TCP_SERVER_PORT.getName(), String.format("  \"%s\" [integer]: The port number of the TCP server", ConfigName.TCP_SERVER_PORT.getName()));
 

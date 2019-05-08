@@ -11,7 +11,7 @@ import java.nio.file.Path;
 public class FileUtils {
 
     public static Node buildTreeGraph() throws ConfigException {
-        return Filesystem.buildGraph(Config.getConfigValue(ConfigName.SYNC_DIR.getName()).get());
+        return Filesystem.buildGraph(Config.getConfigValue(ConfigName.SOURCE_DIR.getName()).get());
     }
 
     public static void getFileContents(Path path) {

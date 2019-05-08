@@ -2,7 +2,8 @@ package com.nobbyknox.cibecs.commons.configuration;
 
 public enum ConfigName {
     ACCOUNT_CODE("accountCode"),
-    SYNC_DIR("syncDir"),
+    SOURCE_DIR("sourceDir"),
+    TARGET_DIR("targetDir"),
     TCP_SERVER_HOST("tcpServerHost"),
     TCP_SERVER_PORT("tcpServerPort");
 

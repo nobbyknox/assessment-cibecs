@@ -60,7 +60,7 @@ public class Server {
     }
 
     private void checkConfig() throws ConfigException {
-        String[] requiredConfigNames = {ConfigName.TCP_SERVER_PORT.getName()};
+        String[] requiredConfigNames = {ConfigName.TARGET_DIR.getName(), ConfigName.TCP_SERVER_PORT.getName()};
 
         try {
             Config.configureWith(new EnvironmentConfigProvider());
