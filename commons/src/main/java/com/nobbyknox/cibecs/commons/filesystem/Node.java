@@ -8,11 +8,13 @@ public class Node implements FilesystemEntry, Serializable {
 
     private String name;
     private String path;
+    private boolean directory;
     private List<Node> children;
 
-    public Node(String name, String path) {
+    public Node(String name, String path, boolean directory) {
         this.name = name;
         this.path = path;
+        this.directory = directory;
         this.children = new ArrayList<>();
     }
 
@@ -24,6 +26,11 @@ public class Node implements FilesystemEntry, Serializable {
     @Override
     public String getPath() {
         return this.path;
+    }
+
+    @Override
+    public boolean isDirectory() {
+        return this.directory;
     }
 
     @Override
@@ -42,7 +49,9 @@ public class Node implements FilesystemEntry, Serializable {
 
     private void printNode(Node node, String accumulator) {
         System.out.println(accumulator + node.getName());
-        node.getChildren().stream().forEach((child) -> printNode(child, accumulator + "  "));
+
+        // Descend further into subdirectories only when current node is a directory
+        node.getChildren().stream().filter(Node::isDirectory).forEach((child) -> printNode(child, accumulator + "  "));
     }
 
 }

@@ -32,14 +32,14 @@ public class Filesystem {
     }
 
     private static Node getNode(Path dir) {
-        Node node = new Node(dir.toFile().getName(), dir.toFile().getPath());
+        Node node = new Node(dir.toFile().getName(), dir.toFile().getPath(), true);
 
         try {
             Files.newDirectoryStream(dir).forEach((path) -> {
                 if (path.toFile().isDirectory()) {
                     node.getChildren().add(getNode(path));
                 } else {
-                    node.getChildren().add(new Node(path.toFile().getName(), path.toFile().getPath()));
+                    node.getChildren().add(new Node(path.toFile().getName(), path.toFile().getPath(), false));
                 }
             });
         } catch (IOException e) {

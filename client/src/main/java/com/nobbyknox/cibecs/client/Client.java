@@ -3,6 +3,7 @@ package com.nobbyknox.cibecs.client;
 import com.nobbyknox.cibecs.client.communications.MessageHandler;
 import com.nobbyknox.cibecs.commons.api.Comms;
 import com.nobbyknox.cibecs.commons.api.Config;
+import com.nobbyknox.cibecs.commons.api.Filesystem;
 import com.nobbyknox.cibecs.commons.communications.TreeGraphMessage;
 import com.nobbyknox.cibecs.commons.configuration.ConfigName;
 import com.nobbyknox.cibecs.commons.configuration.EnvironmentConfigProvider;
@@ -82,7 +83,7 @@ public class Client {
         logger.info("Initiating file transfer...");
 
         try {
-            Node root = FileUtils.buildTreeGraph();
+            Node root = Filesystem.buildGraph(Config.getConfigValue(ConfigName.SOURCE_DIR.getName()).get());
             Comms.tellServer(new TreeGraphMessage(Config.getConfigValue(ConfigName.ACCOUNT_CODE.getName()).get(), root));
         } catch (Exception exc) {
             logger.error("An error occurred while sending the folder manifest to the server: " + exc.getMessage());
