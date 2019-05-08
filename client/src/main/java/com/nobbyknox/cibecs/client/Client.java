@@ -14,6 +14,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
 
+/**
+ * This is the main entry point into the client component
+ */
 public class Client {
 
     private Logger logger = LogManager.getLogger();
@@ -22,6 +25,9 @@ public class Client {
         new Client();
     }
 
+    /**
+     * Instantiate a new client, check the configuration and connect to the server
+     */
     public Client() {
         // Check that all the mandatory parameters/settings have been configured.
         // We cannot run without these.
@@ -55,6 +61,19 @@ public class Client {
         initiateFileTransfer();
     }
 
+    /**
+     * Ensure we have the mandatory config elements set. Without the following, the
+     * server cannot run:
+     *
+     * <ul>
+     * <li>Account code of the customer
+     * <li>Source directory to upload to the server
+     * <li>Host name or IP address of the server
+     * <li>Port number of the server
+     * </ul>
+     *
+     * @throws ConfigException
+     */
     private void checkConfig() throws ConfigException {
         String[] requiredConfigNames = {
                 ConfigName.ACCOUNT_CODE.getName(),
@@ -72,6 +91,12 @@ public class Client {
         }
     }
 
+    /**
+     * Connect to the server
+     *
+     * @param host host name or IP address of the server
+     * @param port port number of the server
+     */
     private void connectToServer(String host, int port) {
         Runnable clientRunner = () -> {
             try {
@@ -85,6 +110,10 @@ public class Client {
         new Thread(clientRunner).start();
     }
 
+    /**
+     * Initiate the file upload conversation (workflow) with the server by
+     * sending it a tree graph
+     */
     private void initiateFileTransfer() {
         logger.info("Initiating file transfer...");
 
@@ -92,7 +121,8 @@ public class Client {
             Node root = Filesystem.buildGraph(Config.getConfigValue(ConfigName.SOURCE_DIR.getName()).get());
             Comms.tellServer(new TreeGraphMessage(Config.getConfigValue(ConfigName.ACCOUNT_CODE.getName()).get(), root));
         } catch (Exception exc) {
-            logger.error("An error occurred while sending the folder manifest to the server: " + exc.getMessage());
+            logger.error("An error occurred while sending the folder manifest to the server");
+            logger.error(exc);
         }
     }
 }

@@ -12,9 +12,17 @@ import org.apache.logging.log4j.Logger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+/**
+ * Comms message handler where all communication from the server is handled
+ */
 public class MessageHandler {
     private static Logger logger = LogManager.getLogger();
 
+    /**
+     * Handle an incoming message of type {@link Message}
+     *
+     * @param message incoming message
+     */
     public static void handle(Message message) {
         if (message == null) {
             return;
@@ -25,6 +33,11 @@ public class MessageHandler {
         }
     }
 
+    /**
+     * Handle incoming {@link FileRequestMessage} message
+     *
+     * @param message incoming message
+     */
     private static void handleFileRequestMessage(FileRequestMessage message) {
         logger.info("Request received for file " + message.getPath());
 
@@ -35,8 +48,9 @@ public class MessageHandler {
             reply.setContents(Files.readAllBytes(Paths.get(message.getPath())));
 
             Comms.tellServer(reply);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception exc) {
+            logger.error(String.format("Unable to read the file \"%s\". Error:", message.getPath()));
+            logger.error(exc);
         }
     }
 }

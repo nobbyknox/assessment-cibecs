@@ -21,6 +21,10 @@ public class Server {
         new Server();
     }
 
+    /**
+     * Instantiate a new server, check the configuration and start a
+     * socket server
+     */
     public Server() {
         // Check that all the mandatory parameters/settings have been configured.
         // We cannot run without these.
