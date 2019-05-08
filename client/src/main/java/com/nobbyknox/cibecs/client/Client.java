@@ -83,7 +83,6 @@ public class Client {
 
         try {
             Node root = FileUtils.buildTreeGraph();
-            logger.debug(root);
             Comms.tellServer(new TreeGraphMessage(Config.getConfigValue(ConfigName.ACCOUNT_CODE.getName()).get(), root));
         } catch (Exception exc) {
             logger.error("An error occurred while sending the folder manifest to the server: " + exc.getMessage());

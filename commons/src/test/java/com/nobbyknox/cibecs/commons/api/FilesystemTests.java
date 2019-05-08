@@ -15,5 +15,6 @@ class FilesystemTests {
     void shouldBuildGraph() {
         Node root = Filesystem.buildGraph("src/test/resources/dir-root");
         assertEquals(4, root.getChildren().size());
+        root.printGraph();
     }
 }
