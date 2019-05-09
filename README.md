@@ -12,9 +12,9 @@ The following is required in order to run the assessment project:
 
 ## Getting Started
 
-There are three ways that you can run this project. The first is through the command line with the scripts provided. The second from your IDE, which is also helpfull if you're running on Windows. The third is through Docker.
+There are three ways that you can run this project. The first is from the command line with the scripts provided. The second from your IDE, which is also helpfull if you're running on Windows. The third is through Docker.
 
-### Run Through the Command Line
+### Run From the Command Line
 
 These instructions as well as the scripts provided in the project are for Linux or MacOS based systems. Running WSL on Windows will also work.
 
@@ -142,4 +142,4 @@ The author is aware of the following limitations:
 
 ## Parting Thoughts
 
-I had great fun with this project and it required that I brush up on some aspects of Java that I did not use recently. Nevertheless, I think that I met the brief and trust that this assessment will receive a favourable review.
+I had great fun with this project and it required that I brush up on some aspects of Java that I have not use recently. Nevertheless, I think that I met the brief and trust that this assessment will receive a favourable review.
