@@ -29,6 +29,8 @@ public class Client {
      * Instantiate a new client, check the configuration and connect to the server
      */
     public Client() {
+        logger.info("Client starting...");
+
         // Check that all the mandatory parameters/settings have been configured.
         // We cannot run without these.
         try {

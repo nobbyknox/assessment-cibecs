@@ -26,6 +26,8 @@ public class Server {
      * socket server
      */
     public Server() {
+        logger.info("Server starting...");
+
         // Check that all the mandatory parameters/settings have been configured.
         // We cannot run without these.
         try {
