@@ -1,22 +1,6 @@
 # README
 
-This project serves as my assessment submission to Cibecs, as requested on 3 May 2019.
-
-## Status
-
-Busy...
-
-## Notes
-
-Some notes that you may want to include in the final main README file.
-
-* Configuration is external to the system.
-    - No properties
-    - Follow SOLID principles (TODO: Get link)
-    - Docker ready
-    - Include documentation for the configuration of the system (both client and server)
-* Java version 8 was embraced w.r.t. lambdas, "Optional", etc
-* Multi-tenanted
+This repository serves as my assessment submission to Cibecs, as requested on 3 May 2019.
 
 ## Requirements
 
@@ -52,18 +36,37 @@ This project is runnable with the least amount of effort on your part. 😀 Foll
     ./run.sh
     ```
 
+## Running on Windows
+
+The easiest way to run the client and server components is through your IDE.
+
+To run the server, configure the following environment variables in your IDE and run the `Server` class.
+
+| Variable      | Value  |
+| :------------ | :----- |
+| targetDir     | store  |
+| tcpServerPort | 9050   |
+
+Configure the client component with the following environment variables and run the `Client` class.
+
+| Variable        | Value       |
+| :-------------- | :---------- |
+| accountCode     | customer001 |
+| sourceDir       | projectX    |
+| tcpServerHost   | 127.0.0.1   |
+| tcpServerPort   | 9050        |
+
 ## How it Works
 
-The project builds a tree graph of a specific directory (configured in client component). This graph is then submitted to the server via a TCP socket connection. Upon receipt of the graph, the server then requests each file individually from the client and saves the files in the `store` directory, using the customer's account code as parent directory, in exactly the same directory structure as on the client.
+The project builds a tree graph of a specific directory (configured in client component). This graph is then submitted to the server via a TCP socket connection. Upon receipt of the graph, the server requests each file individually from the client and saves the files in the `store` directory, using the customer's account code as parent directory, in exactly the same directory structure as on the client.
 
 In short, files from the `${PROJECT_ROOT}/client/projectX/` directory is copied to `${PROJECT_ROOT}/server/store/${ACCOUNT_CODE}/` on start-up of the client component.
 
-// TODO: I don't like the following sentence
 You will notice that the client files are stored on the server under the client's unique account code. This makes the system multi-tenanted.
 
 ## Configuration
 
-Run of the mill projects are configured with properties files, like they have been for years. This project was build with an eye on being deployable through Docker and for this reason the configuration was moved to environment variables, as this is the industry standard way of configuring containers. The thinking behind this is that configuration is provided external to the container. An objective rarely achievable using properties files.
+Run of the mill projects are configured with properties files, like they have been for years. This project was build with an eye on being deployable through Docker and for this reason the configuration was moved to environment variables, as this is the industry standard way of configuring containers.
 
 The shell script `run.sh` for both the `client` and `server` components may be edited and configured to suite your needs. The project has sensible defaults, so you do not have to make any configuration changes.
 
@@ -72,5 +75,9 @@ The shell script `run.sh` for both the `client` and `server` components may be e
 The author is aware of the following limitations:
 
 * In its current state, the server is unable to accept repeat connections after the initial file upload process completes.
-* It is unknown how well the system will cope with large files. The largest file tested was 76M.
-* It is unknown how the system will run on Java version 9 or higher. It was only tested on Java 8.
+* It is unknown how well the system will cope with large files. The largest file tested was 76 MB and it transferred successfully.
+* It is unknown how the system will run on Java version 9 or higher. It was only tested with Java 8.
+
+## Parting Thoughts
+
+I had great fun with this project and it required that I brush up on some aspects of Java that I did not use recently. Nevertheless, I think that I met the brief and trust that this assessment will receive a favourable review.

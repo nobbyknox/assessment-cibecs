@@ -11,3 +11,5 @@
       test resources.
 - [x] Mention in the README.md that the solution is multi-tenanted
 - [-] Do I actually use the name of a node? If not, get rid of it.
+- [-] Environment variables are usually in upper case. Confirm and change if necessary.
+- [ ] What about docker? Will I provide a Dockerfile?
