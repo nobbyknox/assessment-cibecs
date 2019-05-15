@@ -1,6 +1,6 @@
 # README
 
-This repository serves as my assessment submission to Cibecs, as requested on 3 May 2019.
+This repository serves as my assessment submission to a *secret company* that does not want to be named, as requested on 3 May 2019.
 
 ## Requirements
 
@@ -22,7 +22,7 @@ Follow along with these easy steps:
 
 1. Clone the project to your local PC or laptop:
     ```
-    git clone https://github.com/nobbyknox/assessment-cibecs.git
+    git clone https://github.com/nobbyknox/assessment-secret001.git
     ```
 2. Compile and install the `commons` component into your local `.m2` (maven) repository. This component provides shared resources that both the server and client components rely on.
     ```
@@ -67,7 +67,7 @@ Please remember that you still have to install the `commons` component in your l
 First, we need to create a network:
 
 ```bash
-docker network create cibecs
+docker network create secret001
 ```
 
 With this out of the way, we can proceed to build and run the `server` and `client` components.
@@ -77,13 +77,13 @@ With this out of the way, we can proceed to build and run the `server` and `clie
 Build the image from the project root:
 
 ```bash
-docker build -f dockerfile-server -t cibecs-server:latest .
+docker build -f dockerfile-server -t secret001-server:latest .
 ```
 
 Run the server:
 
 ```bash
-docker run --name cibecs-server --network=cibecs -e targetDir="store" -e tcpServerPort="9050" cibecs-server
+docker run --name secret001-server --network=secret001 -e targetDir="store" -e tcpServerPort="9050" secret001-server
 ```
 
 ### Client
@@ -91,19 +91,19 @@ docker run --name cibecs-server --network=cibecs -e targetDir="store" -e tcpServ
 Build the image from the project root:
 
 ```bash
-docker build -f dockerfile-client -t cibecs-client:latest .
+docker build -f dockerfile-client -t secret001-client:latest .
 ```
 
 Run the client:
 
 ```bash
-docker run --name cibecs-client --network=cibecs -e accountCode="customer001" -e sourceDir="projectX" -e tcpServerHost="cibecs-server" -e tcpServerPort="9050" cibecs-client
+docker run --name secret001-client --network=secret001 -e accountCode="customer001" -e sourceDir="projectX" -e tcpServerHost="secret001-server" -e tcpServerPort="9050" secret001-client
 ```
 
 Once the client uploaded its files to the server, enter the server container and verify that the files were copied:
 
 ```bash
-docker exec -ti cibecs-server bash
+docker exec -ti secret001-server bash
 cd /usr/src/app/server/store
 ls -lR
 ```
@@ -112,10 +112,10 @@ To clean up, remove the containers and the network:
 
 ```bash
 # remove the containers
-docker rm cibecs-server cibecs-client
+docker rm secret001-server secret001-client
 
 # remove the network
-docker network rm cibecs
+docker network rm secret001
 ```
 
 ## How it Works

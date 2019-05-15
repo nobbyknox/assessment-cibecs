@@ -4,4 +4,4 @@ WORKDIR /usr/src/app/commons
 RUN mvn install
 WORKDIR /usr/src/app/client
 RUN mvn package
-CMD ["java", "-cp", "target/dependency/cibecs-commons-0.1.0-SNAPSHOT.jar:target/dependency/log4j-api-2.11.2.jar:target/dependency/log4j-core-2.11.2.jar:target/cibecs-client-0.1.0-SNAPSHOT.jar", "com.nobbyknox.cibecs.client.Client"]
+CMD ["java", "-cp", "target/dependency/secret001-commons-0.1.0-SNAPSHOT.jar:target/dependency/log4j-api-2.11.2.jar:target/dependency/log4j-core-2.11.2.jar:target/secret001-client-0.1.0-SNAPSHOT.jar", "com.nobbyknox.secret001.client.Client"]
