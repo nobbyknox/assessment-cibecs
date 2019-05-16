@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.nobbyknox</groupId>
-	<artifactId>cibecs-server</artifactId>
+	<artifactId>secret001-server</artifactId>
 	<version>0.1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>Cibecs Server</name>
-	<description>Assessment server project for Cibecs</description>
+	<name>Secret001 Server</name>
+	<description>Assessment server project for Secret001</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -23,7 +23,7 @@
 	<dependencies>
         <dependency>
             <groupId>com.nobbyknox</groupId>
-            <artifactId>cibecs-commons</artifactId>
+            <artifactId>secret001-commons</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>

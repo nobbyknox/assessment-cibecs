@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.nobbyknox</groupId>
-	<artifactId>cibecs-client</artifactId>
+	<artifactId>secret001-client</artifactId>
 	<version>0.1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>Cibecs Client</name>
-	<description>Assessment client project for Cibecs</description>
+	<name>Secret001 Client</name>
+	<description>Assessment client project for Secret001</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -24,7 +24,7 @@
         <!-- Our own dependencies, published to local repo for the purposes of this assessment -->
         <dependency>
             <groupId>com.nobbyknox</groupId>
-            <artifactId>cibecs-commons</artifactId>
+            <artifactId>secret001-commons</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
 
